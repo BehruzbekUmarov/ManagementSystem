@@ -1,7 +1,9 @@
 using InnerSystem.Api.Data;
+using InnerSystem.Api.Helper;
 using InnerSystem.Api.Mapping;
 using InnerSystem.Api.Mapping.MappingAssignment;
 using InnerSystem.Api.Mapping.MappingComment;
+using InnerSystem.Api.Mapping.MappingNotification;
 using InnerSystem.Api.Mapping.MappingPost;
 using InnerSystem.Api.Repositories;
 using InnerSystem.Api.Repositories.Interfaces;
@@ -12,6 +14,7 @@ using InnerSystem.Identity.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using System.Reflection;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -49,6 +52,10 @@ builder.Services.AddSwaggerGen(options =>
 			new string[]{}
 		}
 	});
+
+	var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+	var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+	options.IncludeXmlComments(xmlPath);
 });
 
 var connectionString = builder.Configuration.GetConnectionString("ManagementSystemDb");
@@ -63,6 +70,8 @@ builder.Services.AddScoped<ICommentRepository, CommentRepository>();
 builder.Services.AddScoped<IAssignmentMapper, AssignmentMapper>();
 builder.Services.AddScoped<ICommentMapper, CommentMapper>();
 builder.Services.AddScoped<IPostMapper, PostMapper>();
+builder.Services.AddScoped<IPostImageSaveHelper, PostImageSaveHelper>();
+builder.Services.AddScoped<INotificationMapper, NotificationMapper>();
 builder.Services.RegisterIdentityModule(builder.Configuration);
 
 var app = builder.Build();
@@ -83,6 +92,8 @@ if (app.Environment.IsDevelopment())
 	app.UseSwagger();
 	app.UseSwaggerUI();
 }
+
+app.UseStaticFiles();
 
 app.UseHttpsRedirection();
 

@@ -8,4 +8,5 @@ public interface IAssignmentMapper
 	Assignment MapToEntity(CreateAssignmentDto dto);
 	AssignmentDto MapToDto(Assignment entity);
 	void MapToEntity(UpdateAssignmentDto dto, Assignment entity);
+	List<AssignmentDto> MapToDtoList(IEnumerable<Assignment> comments);
 }

@@ -14,7 +14,14 @@ public class CommentMapper : ICommentMapper
 			PostId = comment.PostId,
 			AuthorId = comment.AuthorId,
 			IsDeleted = comment.IsDeleted,
+			CreatedDate = comment.CreatedDate,
+			UpdatedDate = comment.UpdatedDate
 		};
+	}
+
+	public List<CommentDto> MapToDtoList(IEnumerable<Comment> comments)
+	{
+		return comments.Select(MapToDto).ToList();
 	}
 
 	public Comment MapToEntity(CreateCommentDto dto)
@@ -26,9 +33,9 @@ public class CommentMapper : ICommentMapper
 		};
 	}
 
-	public void MapToEntity(UpdateCommentDto dto, Comment comment)
+	public void MapToExistingEntity(UpdateCommentDto dto, Comment entity)
 	{
-		comment.Content = dto.Content;
-		comment.PostId = dto.PostId;
+		entity.Content = dto.Content;
+		entity.PostId = dto.PostId;
 	}
 }

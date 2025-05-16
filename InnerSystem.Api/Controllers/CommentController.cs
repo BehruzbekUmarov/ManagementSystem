@@ -3,12 +3,17 @@ using InnerSystem.Api.Entities;
 using InnerSystem.Api.Mapping.MappingComment;
 using InnerSystem.Api.Repositories.Interfaces;
 using InnerSystem.Identity.Abstract;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InnerSystem.Api.Controllers;
 
+/// <summary>
+/// Manages operations related to user comments.
+/// </summary>
 [Route("api/[controller]")]
 [ApiController]
+[Authorize]
 public class CommentController : ControllerBase
 {
 	private readonly ICommentRepository _commentRepository;
@@ -22,6 +27,11 @@ public class CommentController : ControllerBase
 		_environmentAccessor = environmentAccessor;
 	}
 
+	/// <summary>
+	/// Gets a comment by its unique identifier.
+	/// </summary>
+	/// <param name="id">Comment ID.</param>
+	/// <returns>Comment details.</returns>
 	[HttpGet("{id}")]
 	public async Task<ActionResult> GetById(Guid id)
 	{
@@ -31,7 +41,9 @@ public class CommentController : ControllerBase
 			if (comment == null)
 				return NotFound();
 
-			return Ok(comment);
+			var toDto = _commentMapper.MapToDto(comment);
+
+			return Ok(toDto);
 		}
 		catch (Exception ex)
 		{
@@ -39,12 +51,21 @@ public class CommentController : ControllerBase
 		}
 	}
 
+	/// <summary>
+	/// Gets all comments authored by a specific user.
+	/// </summary>
+	/// <param name="authorId">Author ID.</param>
+	/// <returns>List of comments.</returns>
 	[HttpGet("author/{authorId}")]
 	public async Task<ActionResult> GetByAuthor(Guid authorId)
 	{
 		try
 		{
 			var comments = await _commentRepository.GetCommentsByAuthorAsync(authorId);
+			if (comments == null) return NotFound();
+
+			var toDto = _commentMapper.MapToDtoList(comments);
+
 			return Ok(comments);
 		}
 		catch (Exception ex)
@@ -53,12 +74,21 @@ public class CommentController : ControllerBase
 		}
 	}
 
+	/// <summary>
+	/// Retrieves all comments with optional filters.
+	/// </summary>
+	/// <param name="parameters">Filter and pagination parameters.</param>
+	/// <returns>Filtered list of comments.</returns>
 	[HttpGet]
-	public async Task<ActionResult> GetAll()
+	public async Task<ActionResult<IEnumerable<CommentDto>>> GetAll([FromQuery] CommentQueryParameters parameters)
 	{
 		try
 		{
-			var comments = await _commentRepository.GetAllAsync();
+			var comments = await _commentRepository.GetFilteredCommentsAsync(parameters);
+			if (comments == null) return NotFound();
+
+			var toDto = _commentMapper.MapToDtoList(comments);
+
 			return Ok(comments);
 		}
 		catch (Exception ex)
@@ -67,6 +97,12 @@ public class CommentController : ControllerBase
 		}
 	}
 
+	/// <summary>
+	/// Gets all comments under a specific post. Accessible by Admin and Manager roles.
+	/// </summary>
+	/// <param name="postId">Post ID.</param>
+	/// <returns>List of comments.</returns>
+	[Authorize(Roles = "Admin, Manager")]
 	[HttpGet("post/{postId}")]
 	public async Task<ActionResult> GetByPost(Guid postId)
 	{
@@ -81,6 +117,11 @@ public class CommentController : ControllerBase
 		}
 	}
 
+	/// <summary>
+	/// Creates a new comment.
+	/// </summary>
+	/// <param name="comment">Comment creation data.</param>
+	/// <returns>Success result.</returns>
 	[HttpPost]
 	public async Task<ActionResult> Create([FromBody] CreateCommentDto comment)
 	{
@@ -109,6 +150,13 @@ public class CommentController : ControllerBase
 		}
 	}
 
+	/// <summary>
+	/// Updates an existing comment. Accessible by Admin and Manager roles.
+	/// </summary>
+	/// <param name="id">Comment ID.</param>
+	/// <param name="updatedComment">Updated comment data.</param>
+	/// <returns>Success or error message.</returns>
+	[Authorize(Roles = "Admin, Manager")]
 	[HttpPut("{id}")]
 	public async Task<ActionResult> Update(Guid id, [FromBody] UpdateCommentDto updatedComment)
 	{
@@ -132,6 +180,12 @@ public class CommentController : ControllerBase
 		}
 	}
 
+	/// <summary>
+	/// Deletes a comment. Accessible by Admin role only.
+	/// </summary>
+	/// <param name="id">Comment ID.</param>
+	/// <returns>Success or error result.</returns>
+	[Authorize(Roles = "Admin")]
 	[HttpDelete("{id}")]
 	public async Task<ActionResult> Delete(Guid id)
 	{

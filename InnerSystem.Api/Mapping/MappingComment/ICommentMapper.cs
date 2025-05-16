@@ -7,5 +7,6 @@ public interface ICommentMapper
 {
 	CommentDto MapToDto(Comment comment);
 	Comment MapToEntity(CreateCommentDto dto);
-	void MapToEntity(UpdateCommentDto dto, Comment comment);
+	void MapToExistingEntity(UpdateCommentDto dto, Comment comment);
+	List<CommentDto> MapToDtoList(IEnumerable<Comment> comments);
 }

@@ -1,4 +1,5 @@
-﻿using InnerSystem.Api.DTOs.Post;
+﻿using InnerSystem.Api.DTOs.Notification;
+using InnerSystem.Api.DTOs.Post;
 using InnerSystem.Api.Entities;
 using InnerSystem.Api.Enums;
 
@@ -6,14 +7,29 @@ namespace InnerSystem.Api.Mapping.MappingPost;
 
 public class PostMapper : IPostMapper
 {
+	private readonly IHttpContextAccessor _contextAccessor;
+
+	public PostMapper(IHttpContextAccessor contextAccessor)
+	{
+		_contextAccessor = contextAccessor;
+	}
+
 	public PostDto MapToDto(Post post)
 	{
+		var request = _contextAccessor.HttpContext?.Request;
+
+		var imageUrl = post.Image;
+		if (request != null && !string.IsNullOrEmpty(post.Image))
+		{
+			imageUrl = $"{request.Scheme}://{request.Host}{post.Image}";
+		}
+
 		return new PostDto
 		{
 			Id = post.Id,
 			Title = post.Title,
 			Body = post.Body,
-			Image = post.Image,
+			Image = imageUrl,
 			Status = post.Status,
 			AuthorId = post.AuthorId,
 			IsDeleted = post.IsDeleted,
@@ -28,7 +44,6 @@ public class PostMapper : IPostMapper
 		{
 			Title = dto.Title,
 			Body = dto.Body,
-			Image = dto.Image,
 			Status = PostStatus.Draft
 		};
 	}
@@ -37,6 +52,10 @@ public class PostMapper : IPostMapper
 	{
 		post.Title = dto.Title;
 		post.Body = dto.Body;
-		post.Image = dto.Image;
+	}
+
+	public List<PostDto> MapToDtoList(IEnumerable<Post> entities)
+	{
+		return entities.Select(MapToDto).ToList();
 	}
 }

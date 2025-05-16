@@ -1,4 +1,5 @@
 ﻿using InnerSystem.Api.DTOs.Assignment;
+using InnerSystem.Api.DTOs.Comment;
 using InnerSystem.Api.Entities;
 using InnerSystem.Identity.Abstract;
 
@@ -39,6 +40,11 @@ public class AssignmentMapper(IEnvironmentAccessor _environmentAccessor) : IAssi
 			AssignedToId = dto.AssignedToId,
 			Status = Enums.TaskStatus.Pending, 
 		};
+	}
+
+	public List<AssignmentDto> MapToDtoList(IEnumerable<Assignment> comments)
+	{
+		return comments.Select(MapToDto).ToList();
 	}
 
 }

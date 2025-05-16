@@ -43,7 +43,23 @@ public class EnvironmentAccessor(IHttpContextAccessor contextAccessor,
 		return new[] { RoleNames.User, RoleNames.Admin }
 		.Contains(role);
 	}
+	//public bool IsAdmin(Guid id)
+	//{
+	//	if (contextAccessor.HttpContext is null)
+	//		throw new InvalidOperationException("HttpContext cannot be null");
 
+	//	var user = contextAccessor.HttpContext.User;
+
+	//	if (!user.Identity?.IsAuthenticated ?? true)
+	//		return false;
+
+	//	var userIdClaim = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+	//	if (userIdClaim is null || !Guid.TryParse(userIdClaim, out var userId))
+	//		return false;
+
+	//	return userId == id && user.IsInRole(RoleNames.Admin);
+	//}
 	public bool IsAdmin(Guid id)
 	{
 		if (contextAccessor.HttpContext is null)

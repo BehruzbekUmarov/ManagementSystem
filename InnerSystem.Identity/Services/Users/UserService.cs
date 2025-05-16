@@ -44,26 +44,6 @@ public class UserService(ManagementSIdentityDbContext dbContext,
 		dbContext.SaveChanges();
 	}
 
-	//public async Task<IEnumerable<UserDto>> GetAll(
-	//	int pageNumber, int pageSize,
-	//	GenderEnum? gender, string? email)
-	//{
-	//	var query = dbContext.Users.AsQueryable();
-
-	//	if (gender is not null)
-	//		query = query.Where(x => x.Gender == gender);
-
-	//	if (email is not null)
-	//		query = query.Where(x => x.Email == email);
-
-	//	if (pageNumber != 0 && pageSize != 0)
-	//		query = query.Skip(pageSize * (pageNumber - 1)).Take(pageSize);
-
-	//	var users = await query.ToArrayAsync();
-
-	//	return mappingService.Map<IEnumerable<UserDto>, IEnumerable<User>>(users);
-	//}
-
 	public async Task<IEnumerable<UserDto>> GetAll(
 	int pageNumber,
 	int pageSize,
@@ -245,7 +225,7 @@ public class UserService(ManagementSIdentityDbContext dbContext,
 		var user = await userManager.FindByIdAsync(resetPasswordDto.UserId.ToString()) ??
 		throw new Exception("User not found.");
 
-		if (!environmentAccessor.IsUserOrAdmin(resetPasswordDto.UserId))
+		if (!environmentAccessor.IsAdmin(resetPasswordDto.UserId))
 			return false;
 
 		var result = await userManager.ChangePasswordAsync(user, resetPasswordDto.OldPassword, resetPasswordDto.NewPassword);
