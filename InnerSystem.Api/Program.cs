@@ -77,6 +77,17 @@ builder.Services.AddScoped<IPostImageSaveHelper, PostImageSaveHelper>();
 builder.Services.AddScoped<INotificationMapper, NotificationMapper>();
 builder.Services.RegisterIdentityModule(builder.Configuration);
 
+builder.Services.AddCors(options =>
+{
+	options.AddPolicy("AllowFrontend", policy =>
+	{
+		policy.WithOrigins("http://localhost:3000", "https://MKISystemfrontend.com") // update with real URLs
+			  .AllowAnyHeader()
+			  .AllowAnyMethod();
+	});
+});
+
+
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
@@ -88,6 +99,8 @@ using (var scope = app.Services.CreateScope())
 	await RoleInitializer.SeedRolesAsync(roleManager);
 	await RoleInitializer.SeedAdminAsync(userManager);
 }
+
+app.UseCors("AllowFrontend");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
