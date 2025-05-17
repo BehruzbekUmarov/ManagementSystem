@@ -29,7 +29,7 @@ public class PostRepository : GenericRepository<Post>, IPostRepository
 
 	public async Task<IEnumerable<Post>> GetFilteredPostsAsync(PostQueryParameters parameters)
 	{
-		var query = _dbContext.Posts.AsQueryable();
+		var query = _dbContext.Posts.Include(p => p.Comments).AsQueryable();
 
 		// Filtering
 		if (!string.IsNullOrWhiteSpace(parameters.Title))

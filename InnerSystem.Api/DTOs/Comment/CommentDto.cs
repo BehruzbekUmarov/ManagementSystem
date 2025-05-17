@@ -1,4 +1,6 @@
-﻿namespace InnerSystem.Api.DTOs.Comment;
+﻿using InnerSystem.Api.DTOs.Post;
+
+namespace InnerSystem.Api.DTOs.Comment;
 
 public class CommentDto
 {
@@ -6,7 +8,8 @@ public class CommentDto
 	
 	public string Content { get; set; } = null!;
 
-	public Guid PostId { get; set; }
+	//public Guid PostId { get; set; }
+	public ShallowPostDto Post { get; set; }
 
 	public Guid AuthorId { get; set; }
 

@@ -37,7 +37,7 @@ public class CommentController : ControllerBase
 	{
 		try
 		{
-			var comment = await _commentRepository.GetByIdAsync(id);
+			var comment = await _commentRepository.GetByIdAsync(id, x => ((Comment)(object)x).Post);
 			if (comment == null)
 				return NotFound();
 
@@ -89,7 +89,7 @@ public class CommentController : ControllerBase
 
 			var toDto = _commentMapper.MapToDtoList(comments);
 
-			return Ok(comments);
+			return Ok(toDto);
 		}
 		catch (Exception ex)
 		{

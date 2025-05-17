@@ -33,7 +33,7 @@ public class CommentRepository : GenericRepository<Comment>, ICommentRepository
 
 	public async Task<IEnumerable<Comment>> GetFilteredCommentsAsync(CommentQueryParameters parameters)
 	{
-		var query = _context.Comments.AsQueryable();
+		var query = _context.Comments.Include(x => x.Post).AsQueryable();
 
 		// Filtering
 		if (parameters.PostId.HasValue)

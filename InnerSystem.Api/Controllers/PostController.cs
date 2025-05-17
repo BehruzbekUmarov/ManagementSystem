@@ -41,7 +41,7 @@ public class PostController : ControllerBase
 	{
 		try
 		{
-			var post = await _postRepository.GetByIdAsync(id);
+			var post = await _postRepository.GetByIdAsync(id, x => ((Post)(object)x).Comments);
 			if (post == null)
 				return NotFound();
 
