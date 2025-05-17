@@ -19,6 +19,6 @@ public class PostImageSaveHelper : IPostImageSaveHelper
 			await image.CopyToAsync(stream);
 		}
 
-		return $"/images/cars/{fileName}";
+		return $"/images/posts/{fileName}";
 	}
 }

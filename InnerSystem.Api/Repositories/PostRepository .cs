@@ -14,13 +14,6 @@ public class PostRepository : GenericRepository<Post>, IPostRepository
 		_dbContext = context;
 	}
 
-	public async Task<IEnumerable<Post>> GetPostsWithCommentsAsync()
-	{
-		return await _dbContext.Set<Post>()
-			.Include(p => p.Comments)
-			.ToListAsync();
-	}
-
 	public async Task<Post?> GetPostWithAuthorAsync(Guid postId)
 	{
 		return await _dbContext.Set<Post>()

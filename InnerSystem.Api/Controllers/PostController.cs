@@ -74,24 +74,7 @@ public class PostController : ControllerBase
 			return StatusCode(500, $"Internal server error: {ex.Message}");
 		}
 	}
-
-	/// <summary>
-	/// Retrieves all posts including their associated comments.
-	/// </summary>
-	/// <returns>A list of posts with embedded comments.</returns>
-	[HttpGet("with-comments")]
-	public async Task<ActionResult> GetWithComments()
-	{
-		try
-		{
-			var posts = await _postRepository.GetPostsWithCommentsAsync();
-			return Ok(posts);
-		}
-		catch (Exception ex)
-		{
-			return StatusCode(500, $"Internal server error: {ex.Message}");
-		}
-	}
+	
 
 	/// <summary>
 	/// Retrieves a specific post along with its author's information.
