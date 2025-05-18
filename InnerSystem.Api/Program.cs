@@ -77,15 +77,15 @@ builder.Services.AddScoped<IPostImageSaveHelper, PostImageSaveHelper>();
 builder.Services.AddScoped<INotificationMapper, NotificationMapper>();
 builder.Services.RegisterIdentityModule(builder.Configuration);
 
-builder.Services.AddCors(options =>
-{
-	options.AddPolicy("AllowFrontend", policy =>
-	{
-		policy.WithOrigins("http://localhost:3000", "https://MKISystemfrontend.com") // update with real URLs
-			  .AllowAnyHeader()
-			  .AllowAnyMethod();
-	});
-});
+//builder.Services.AddCors(options =>
+//{
+//	options.AddPolicy("AllowFrontend", policy =>
+//	{
+//		policy.WithOrigins("http://localhost:3000", "https://mkisystembackend.com") // update with real URLs
+//			  .AllowAnyHeader()
+//			  .AllowAnyMethod();
+//	});
+//});
 
 
 var app = builder.Build();
@@ -100,7 +100,7 @@ using (var scope = app.Services.CreateScope())
 	await RoleInitializer.SeedAdminAsync(userManager);
 }
 
-app.UseCors("AllowFrontend");
+//app.UseCors("AllowFrontend");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
