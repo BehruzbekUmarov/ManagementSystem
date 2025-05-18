@@ -65,7 +65,6 @@ builder.Services.AddSwaggerGen(options =>
 //var connectionString = builder.Configuration.GetConnectionString("ManagementSystemDb");
 //builder.Services.AddDbContext<AppDbContext>(options 
 //	=> options.UseNpgsql(connectionString));
-
 var connectionString = GetConnectionString();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -85,6 +84,7 @@ string GetConnectionString()
 	// Fall back to appsettings.json for local dev
 	return builder.Configuration.GetConnectionString("ManagementSystemDb");
 }
+
 
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped<IPostRepository, PostRepository>();
