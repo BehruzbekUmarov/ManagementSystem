@@ -21,8 +21,26 @@ public static class IdentityModule
 {
 	public static IServiceCollection RegisterIdentityModule(this IServiceCollection services, IConfiguration configuration)
 	{
-		var connectionString = configuration.GetConnectionString("ManagementSystemDb");
-		services.AddDbContext<ManagementSIdentityDbContext>(options => options.UseNpgsql(connectionString));
+		//var connectionString = configuration.GetConnectionString("ManagementSystemDb");
+		//services.AddDbContext<ManagementSIdentityDbContext>(options => options.UseNpgsql(connectionString));
+		var connectionString = GetConnectionString();
+		services.AddDbContext<ManagementSIdentityDbContext>(options =>
+	    options.UseNpgsql(connectionString));
+
+		string GetConnectionString()
+		{
+			// Check if we're on Render (DATABASE_URL will be set in the environment)
+			var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
+			if (!string.IsNullOrEmpty(databaseUrl))
+			{
+				var uri = new Uri(databaseUrl);
+				var userInfo = uri.UserInfo.Split(':');
+				return $"Host={uri.Host};Port={uri.Port};Username={userInfo[0]};Password={userInfo[1]};Database={uri.AbsolutePath.TrimStart('/')};SSL Mode=Require;Trust Server Certificate=true";
+			}
+
+			// Fall back to appsettings.json for local dev
+			return configuration.GetConnectionString("ManagementSystemDb");
+		}
 
 		services.AddIdentity<User, Role>(option =>
 		{
@@ -72,4 +90,6 @@ public static class IdentityModule
 
 		return services;
 	}
+
+	
 }
