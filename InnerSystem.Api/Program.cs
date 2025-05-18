@@ -85,6 +85,12 @@ string GetConnectionString()
 	return builder.Configuration.GetConnectionString("ManagementSystemDb");
 }
 
+var port = Environment.GetEnvironmentVariable("PORT");
+if (port != null)
+{
+	builder.WebHost.UseUrls($"http://*:{port}");
+}
+
 
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped<IPostRepository, PostRepository>();

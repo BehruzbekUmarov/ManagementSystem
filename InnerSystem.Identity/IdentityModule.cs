@@ -39,7 +39,7 @@ public static class IdentityModule
 			}
 
 			// Fall back to appsettings.json for local dev
-			return builder.Configuration.GetConnectionString("ManagementSystemDb");
+			return configuration.GetConnectionString("ManagementSystemDb");
 		}
 
 		services.AddIdentity<User, Role>(option =>
