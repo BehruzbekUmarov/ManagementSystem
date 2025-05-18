@@ -81,7 +81,7 @@ builder.Services.RegisterIdentityModule(builder.Configuration);
 //{
 //	options.AddPolicy("AllowFrontend", policy =>
 //	{
-//		policy.WithOrigins("http://localhost:3000", "https://mkisystembackend.com") // update with real URLs
+//		policy.WithOrigins("http://localhost:3000", "https://imsbackend.com") // update with real URLs
 //			  .AllowAnyHeader()
 //			  .AllowAnyMethod();
 //	});
