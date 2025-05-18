@@ -6,7 +6,7 @@ namespace InnerSystem.Identity.DTOs.Auth;
 public class SignUpDto
 {
 	[EmailAddress(ErrorMessage = "this should be real email")]
-    public string Email { get; set; }
+    public string? Email { get; set; }
     [Required(ErrorMessage = "This field is Required.")]
 	[StringLength(100, ErrorMessage = "Minimum Length = 8 !", MinimumLength = 8)]
 	[DataType(DataType.Password)]
