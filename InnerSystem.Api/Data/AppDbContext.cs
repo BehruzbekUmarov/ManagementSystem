@@ -38,7 +38,7 @@ public class AppDbContext : DbContext
 		base.OnModelCreating(modelBuilder);
 
 		// BaseEntity configuration (no table needed unless used directly)
-		modelBuilder.Entity<BaseEntity>().UseTptMappingStrategy();
+		//modelBuilder.Entity<BaseEntity>().UseTptMappingStrategy();
 
 		// ----------------- Assignment -----------------
 		modelBuilder.Entity<Assignment>(entity =>

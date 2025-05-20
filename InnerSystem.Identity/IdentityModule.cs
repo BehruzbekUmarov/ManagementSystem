@@ -25,7 +25,7 @@ public static class IdentityModule
 		//services.AddDbContext<ManagementSIdentityDbContext>(options => options.UseNpgsql(connectionString));
 		var connectionString = GetConnectionString();
 		services.AddDbContext<ManagementSIdentityDbContext>(options =>
-	    options.UseNpgsql(connectionString));
+	    options.UseSqlServer(connectionString));
 
 		string GetConnectionString()
 		{
